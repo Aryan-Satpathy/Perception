@@ -1,0 +1,82 @@
+<launch>
+    <arg name="cameras_num" default="1"/>
+    <arg name="image0" default="/pylon_camera_node_center/image_rect"/>
+    <arg name="camera_info0" default="/pylon_camera_node_center/camera_info"/>
+    <arg name="bbox_array0" default="/bbox_array_relabel"/>
+    <arg name="image1" default="/pylon_camera_node_center/image_rect"/>
+    <arg name="camera_info1" default="/pylon_camera_node_center/camera_info"/>
+    <arg name="bbox_array1" default="/bbox_array_center_person"/>
+    <arg name="image2" default="/pylon_camera_node_right/image_rect"/>
+    <arg name="camera_info2" default="/pylon_camera_node_right/camera_info"/>
+    <arg name="bbox_array2" default="/bbox_array_right"/>
+    <arg name="image3" default="/pylon_camera_node_back/image_rect"/>
+    <arg name="camera_info3" default="/pylon_camera_node_back/camera_info"/>
+    <arg name="bbox_array3" default="/bbox_array_backcenter"/>
+    <arg name="image4" default="/usb_cam_left/image_raw"/>
+    <arg name="camera_info4" default="/usb_cam_left/camera_info"/>
+    <arg name="bbox_array4" default="/bbox_array_backleft"/>
+    <arg name="image5" default="/usb_cam_right/image_raw"/>
+    <arg name="camera_info5" default="/usb_cam_right/camera_info"/>
+    <arg name="bbox_array5" default="/bbox_array_backright"/>
+    <arg name="image6" default="/image6"/>
+    <arg name="camera_info6" default="/camera_info6"/>
+    <arg name="bbox_array6" default="/bbox_array6"/>
+    <arg name="image7" default="/image7"/>
+    <arg name="camera_info7" default="/camera_info7"/>
+    <arg name="bbox_array7" default="/bbox_array7"/>
+
+    <ard name="thresh" default="10"/>
+
+    <arg name="input_clusters_topic" default="/dbscan_clustering/clusters"/>
+    <arg name="output_clusters_topic" default="/dbscan_clustering/clusters_with_label"/>
+
+    <arg name="visualize_image" default="true"/>
+    <arg name="plot_all_points" default="false"/>
+    <arg name="is_compresed_image" default="true"/>
+    <arg name="remove_noise_cluster" default="true"/>
+    <arg name="expand_longitudinal_distance" default="0.4"/>
+    <arg name="expand_lateral_distance" default="0.3"/>
+
+    <arg name="compressed_suffix" if="$(arg is_compresed_image)" value="/compressed" />
+    <arg name="compressed_suffix" unless="$(arg is_compresed_image)" value="" />
+    
+    <node pkg="lidar_cam_fusion_py" type="lidar_cam_fusion_py_node.py" name="lidar_cam_fusion_py_node" output="screen"> 
+        <rosparam param="nearby_noise_cluster_param">[-6.0, 2.0, -1.8, 1.8, 0.6, 0.6, 1.8, 30]</rosparam> 
+        <rosparam param="line_noise_cluster_param">[-6.0, 2.0, -1.8, 1.8, 0.6, 0.6, 1.8, 30]</rosparam> 
+        <param name="visualize_image" value="$(arg visualize_image)" />
+        <param name="plot_all_points" value="$(arg plot_all_points)" />
+        <param name="is_compresed_image" value="$(arg is_compresed_image)" />
+        <param name="remove_noise_cluster" value="$(arg remove_noise_cluster)" />
+        <param name="expand_longitudinal_distance" value="$(arg expand_longitudinal_distance)" />
+        <param name="expand_lateral_distance" value="$(arg expand_lateral_distance)" />
+
+        <param name="cameras_num"   value="$(arg cameras_num)" />
+        <param name="thresh"   value="$(arg thresh)" />
+        <remap from="input_clusters_topic" to="$(arg input_clusters_topic)"/>
+        <remap from="output_clusters_topic" to="$(arg output_clusters_topic)"/>
+        <remap if="$(eval cameras_num >= 1)" from="image0" to="$(arg image0)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 1)" from="camera_info0" to="$(arg camera_info0)"/>
+        <remap if="$(eval cameras_num >= 1)" from="bbox_array0" to="$(arg bbox_array0)"/>
+        <remap if="$(eval cameras_num >= 2)" from="image1" to="$(arg image1)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 2)" from="camera_info1" to="$(arg camera_info1)"/>
+        <remap if="$(eval cameras_num >= 2)" from="bbox_array1" to="$(arg bbox_array1)"/>
+        <remap if="$(eval cameras_num >= 3)" from="image2" to="$(arg image2)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 3)" from="camera_info2" to="$(arg camera_info2)"/>
+        <remap if="$(eval cameras_num >= 3)" from="bbox_array2" to="$(arg bbox_array2)"/>
+        <remap if="$(eval cameras_num >= 4)" from="image3" to="$(arg image3)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 4)" from="camera_info3" to="$(arg camera_info3)"/>
+        <remap if="$(eval cameras_num >= 4)" from="bbox_array3" to="$(arg bbox_array3)"/>
+        <remap if="$(eval cameras_num >= 5)" from="image4" to="$(arg image4)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 5)" from="camera_info4" to="$(arg camera_info4)"/>
+        <remap if="$(eval cameras_num >= 5)" from="bbox_array4" to="$(arg bbox_array4)"/>
+        <remap if="$(eval cameras_num >= 6)" from="image5" to="$(arg image5)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 6)" from="camera_info5" to="$(arg camera_info5)"/>
+        <remap if="$(eval cameras_num >= 6)" from="bbox_array5" to="$(arg bbox_array5)"/>
+        <remap if="$(eval cameras_num >= 7)" from="image6" to="$(arg image6)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 7)" from="camera_info6" to="$(arg camera_info6)"/>
+        <remap if="$(eval cameras_num >= 7)" from="bbox_array6" to="$(arg bbox_array6)"/>
+        <remap if="$(eval cameras_num >= 8)" from="image7" to="$(arg image7)$(arg compressed_suffix)"/>
+        <remap if="$(eval cameras_num >= 8)" from="camera_info7" to="$(arg camera_info7)"/>
+        <remap if="$(eval cameras_num >= 8)" from="bbox_array7" to="$(arg bbox_array7)"/>
+    </node>
+</launch>
