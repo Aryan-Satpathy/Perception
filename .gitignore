@@ -51,7 +51,10 @@ qtcreator-*
 # Catkin custom files
 CATKIN_IGNORE
 .catkin_workspace
+.catkin_tools
 
+
+bagfiles/
 Yolo_mark-master
 
 # src
@@ -72,4 +75,5 @@ src/pylon_camera_dev/
 src/rslidar_sdk/
 src/shape_estimation/
 src/transform_publisher_infra/
+src/Calibration/
 

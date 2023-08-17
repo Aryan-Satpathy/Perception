@@ -68,6 +68,8 @@ class Node(ListenerNode):
         
         # print(f'Total association cost = {total}.')
 
+        rospy.logwarn(f'Number of Detections so far: {Detection.count}')
+
         return super().fuse()
     
     def generate_cost_matrices(self):
